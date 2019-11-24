@@ -94,34 +94,56 @@ def main_menu(account_data):
             
         # Buy and sell stock
         elif choice == "3":
-            ticker = view.ticker_info()
-            trade = view.buy_sell_choice()
-            if trade not in ("1", "2"):  
-                view.bad_choice_input()
-                return main_menu(account_data)
-            elif trade == "1":
-                volume = float(view.enter_buy_info())
-                try:
-                    account_data.buy(ticker, volume)
-                except errs.NoSuchTickerError:
-                    view.bad_ticker()
-                    return main_menu(account_data)
-                except InsufficientFundsError:
-                    view.insufficient_funds()
-                    return main_menu(account_data)
 
-            elif trade == "2":
-                volume = float(view.enter_sell_info())
-                try:
-                    account_data.sell(ticker, volume)
-                except NoSuchTickerError:
-                    view.bad_ticker()
-                    return main_menu(account_data)
-                except InsufficientSharesError:
-                    view.insufficient_shares()
-                    return main_menu(account_data)
+            while True:
+                # ticker = view.ticker_info() # 1st menu question
+
+                while True:
+                    trade = view.buy_sell_choice() # 1st menu question
+                    if trade in ("1", "2"):
+                        break
+                    view.bad_choice_input()
+
+                if trade == "1":
+                    while True:
+                        ticker = view.ticker_info() # 2nd menu question
+                        volume = view.enter_buy_info() # 3rd menu question
+                        try:
+                            volume = float(volume)
+                            break
+                        except ValueError:
+                            view.bad_number_input()
+                    try:
+                        account_data.buy(ticker, volume)
+                        break
+                    except errs.VolumeLessThanZeroError:
+                        view.bad_number_input()
+                    except errs.NoSuchTickerError:
+                        view.bad_ticker()
+                    except errs.InsufficientFundsError:
+                        view.insufficient_funds()
+
+                elif trade == "2":
+                    while True:
+                        ticker = view.ticker_info() # 2nd menu question
+                        volume = view.enter_sell_info() # 3rd menu question
+                        try:
+                            volume = float(volume)
+                            break
+                        except ValueError:
+                            view.bad_number_input()
+
+                    try:
+                        account_data.sell(ticker, volume)
+                        break
+                    except errs.VolumeLessThanZeroError:
+                        view.bad_number_input()
+                    except errs.NoSuchTickerError:
+                        view.bad_ticker()
+                    except errs.InsufficientSharesError:
+                        view.insufficient_shares()
+            
             return main_menu(account_data)
-
 
         # Look-up stock quotes
         elif choice == "4":

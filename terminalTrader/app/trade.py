@@ -178,7 +178,7 @@ WHERE id=:id;"""
             values = {
                     "account_id": account_id,
                     "ticker": ticker
-            }
+                     }
             cursor.execute(SQL, values)
             result = []
             for dictrow in cursor.fetchall():

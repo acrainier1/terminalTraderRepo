@@ -70,6 +70,7 @@ Hello, {account.first_name} {account.last_name} ({account.account_number})
     [7] Sign out
 """)
 
+
 def print_admin_menu(account):
     """ if user successfully logs in, prints main menu options"""
     print(f"""
@@ -97,22 +98,25 @@ def give_balance(balance):
     print("\nYour balance is: ${:.2f}\n".format(balance))
 
 def enter_deposit_info():
-    return input("How much to deposit? $")
+    return input("\nHow much to deposit? $")
 
 def ticker_info():
-    return input("Enter ticker symbol: ")
+    return input("\nEnter ticker symbol: ")
 
 def bad_ticker():
-    return input("Ticker symbol not found!\nPrease ENTER to continue.")
+    return input("\nTicker symbol not found!\nPrease ENTER to continue.")
 
 def buy_sell_choice():
-    return input("Enter 1 to BUY or enter 2 to SELL.")
+    return input("\nEnter 1 to BUY or enter 2 to SELL. ")
 
 def enter_buy_info():
-    return input("How much to buy? $")
+    return input("\nHow much to buy? $")
 
 def enter_sell_info():
-    return input("How much to sell? $")
+    return input("\nHow much to sell? $")
+
+def bad_number_input():
+    print("\nEnter number greater than 0! Please try again.")
 
 def stock_info(ticker, stock_quote):
     print("\nThe current price for " + str(ticker).upper() + " is $" + str(stock_quote).upper())
@@ -124,8 +128,7 @@ def insufficient_shares():
     print("\nInusfficient shares!")
 
 def positions_info(positions):
-    print("Below is a list of all your positions:\n")
-    print("TICKER  SHARES\n")
+    print("\nBelow is a list of all your positions:\nTICKER  SHARES\n")
     for item in positions:
         print(item.ticker, " ", item.shares,"\n")
 

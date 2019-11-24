@@ -41,6 +41,7 @@ class Account:
         self.balance = kwargs.get("balance", 0.00)
         self.account_number = kwargs.get("account_number")
         self.admin = kwargs.get("admin", 0)
+        self.api_key = kwargs.get("api_key")
 
 
 
@@ -54,17 +55,19 @@ class Account:
 
     def _insert(self):
         """ inserts a new row into the database and sets self.id """
-        self.account_number = randint(1000000,9999999)
+        self.account_number = randint(1111111,9999999)
         with sqlite3.connect(self.dbpath) as connection: 
             cursor = connection.cursor()
             INSERTSQL = """INSERT INTO accounts(first_name, last_name, 
                                                 username, email_address, 
                                                 password_hash, balance, 
-                                                account_number, admin) 
+                                                account_number, admin,
+                                                api_key) 
                             VALUES (:first_name, :last_name, 
                                     :username, :email_address, 
                                     :password_hash, :balance, 
-                                    :account_number, :admin); """
+                                    :account_number, :admin,
+                                    :api_key); """
             values = {
                 "first_name": self.first_name,
                 "last_name": self.last_name,
@@ -73,7 +76,8 @@ class Account:
                 "password_hash": self.password_hash, 
                 "balance": self.balance, 
                 "account_number": self.account_number,
-                "admin": self.admin
+                "admin": self.admin,
+                "api_key": randint(111111111, 999999999)
                 }
             try: 
                 cursor.execute(INSERTSQL, values)
@@ -126,6 +130,20 @@ class Account:
             connection.row_factory = sqlite3.Row
             cursor = connection.cursor()
             cursor.execute(SELECTSQL, {"id": id})
+            dictrow = cursor.fetchone()
+            if dictrow:
+                return cls(**dictrow)
+            return None
+
+
+    @classmethod
+    def from_api_key(cls, api_key):
+        """ return an object of this class for the given api_key """
+        SELECTSQL = "SELECT * FROM accounts WHERE api_key=:api_key;"
+        with sqlite3.connect(cls.dbpath) as connection:
+            connection.row_factory = sqlite3.Row
+            cursor = connection.cursor()
+            cursor.execute(SELECTSQL, {"api_key": api_key})
             dictrow = cursor.fetchone()
             if dictrow:
                 return cls(**dictrow)

@@ -28,6 +28,7 @@ def schema(dbpath=DBPATH):
         balance FLOAT,
         account_number INTEGER,
         admin INTEGER,
+        api_key INTEGER(9),
         UNIQUE(account_number)
     ); """
 
